@@ -1,20 +1,30 @@
 'use strict'
+const url = "postgres://qaismaher:0000@localhost:5432/movie"
+const port = 3000;
+
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const { Client } = require('pg');
+const client = new Client(url);
 const dataForMovies = require('./data.json');
 const axios = require('axios').default;
 const apiKey = process.env.APIKEY;
 const app = express();
 app.use(cors());
-const port = 3000;
 
 app.get('/', dataHandeler);
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.get('/trending', hundleTrending);
 app.get('/search', hundleSearch);
 app.get('/top_rated', hundleTopRated);
 app.get('/upcoming', hundleUpComing);
+app.post("/addMovie",handleAdd);
+app.get("/getMovies",handleGet);
+
 
 
 function dataHandeler(req, res) {
@@ -98,12 +108,6 @@ app.use(function (req, res, text) {
 });
 
 
-app.listen(port, handleListen)
-
-function handleListen() {
-  console.log(`test ${port}`);
-}
-
 function Movie(title, poster_path, overview) {
   this.title = title;
   this.poster_path = poster_path;
@@ -116,3 +120,30 @@ function Trend(id, title, release_date, poster_path, overview) {
   this.poster_path = poster_path;
   this.overview = overview;
 } 
+
+function handleAdd(req , res){
+  const { title, release_date, overview, personal_comment } = req.body;
+
+  let sql = 'INSERT INTO movies(title, release_date, overview, personal_comment) VALUES($1, $2, $3, $4) RETURNING *;' // sql query
+  let values = [title, release_date, overview, personal_comment];
+  client.query(sql, values).then((result) => {
+      console.log(result.rows);
+      return res.status(201).json(result.rows[0]);
+  }).catch()
+};
+
+function handleGet(req , res){
+  let sql = 'SELECT * from movies;'
+  client.query(sql).then((result) => {
+      console.log(result);
+      res.json(result.rows);
+  }).catch((err) => {
+      handleError(err, req, res);
+  });
+};
+client.connect().then(() => {
+
+  app.listen(port, () => {
+      console.log(`test ${port}`);
+  });
+})
