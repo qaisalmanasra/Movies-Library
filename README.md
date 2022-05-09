@@ -3,8 +3,7 @@
 **Author Name**: Qais Manasra
 
 ## WRRC
-![WRRC](./images/WRRC.jpeg)
-![Tree](./images/tree.jpg)
+![wrrc](./images/wrrc.jpg)
 
 ## Overview
 

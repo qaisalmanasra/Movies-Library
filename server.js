@@ -24,6 +24,9 @@ app.get('/top_rated', hundleTopRated);
 app.get('/upcoming', hundleUpComing);
 app.post("/addMovie",handleAdd);
 app.get("/getMovies",handleGet);
+app.put("/UPDATE/:titleName", handleUpdate);
+app.delete("/DELETE", handleDelete);
+app.get("/getMoviesById", handleGetById);
 
 
 
@@ -141,6 +144,34 @@ function handleGet(req , res){
       handleError(err, req, res);
   });
 };
+function handleUpdate(req, res) {
+  const { title, release_date, overview, personal_comment } = req.body;
+  const { titleName } = req.params;
+  let sql = `UPDATE movies SET title=$1, release_date=$2, overview=$3, personal_comment=$4 WHERE id = $5 RETURNING *;`  // sql query
+  let values = [title, release_date, overview, personal_comment, titleName];
+  client.query(sql, values).then((result) => {
+  return res.status(200).json(result.rows);
+  }).catch()
+}
+function handleDelete(req, res) {
+  const  movieId  = req.query.id
+  let sql = 'DELETE FROM movies WHERE id=$1;'
+  let value = [movieId];
+  client.query(sql, value).then(result => {
+  console.log(result);
+  res.send("deleted successfully");
+  }
+  ).catch()
+}
+function handleGetById(req, res) {
+
+  const { id } = req.query;
+  let sql = 'SELECT * from movies WHERE id=$1;'
+  let value = [id];
+  client.query(sql, value).then((result) => {
+    res.json(result.rows);
+  }).catch();
+}
 client.connect().then(() => {
 
   app.listen(port, () => {
