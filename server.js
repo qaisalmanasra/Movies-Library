@@ -1,15 +1,16 @@
 'use strict'
 const url = "postgres://qaismaher:0000@localhost:5432/movie"
+require('dotenv').config();
+
 const port = process.env.PORT;
 
 
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Client } = require('pg');
 //const client = new Client(url);
-const client = new pg.Client({
+const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
