@@ -1,6 +1,6 @@
 'use strict'
 const url = "postgres://qaismaher:0000@localhost:5432/movie"
-const port = 3000;
+const port = process.env.PORT;
 
 
 require('dotenv').config();
