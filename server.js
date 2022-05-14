@@ -1,14 +1,19 @@
 'use strict'
 const url = "postgres://qaismaher:0000@localhost:5432/movie"
-const port = 3000;
-
-
 require('dotenv').config();
+
+const port = process.env.PORT;
+
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { Client } = require('pg');
-const client = new Client(url);
+//const client = new Client(url);
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 const dataForMovies = require('./data.json');
 const axios = require('axios').default;
 const apiKey = process.env.APIKEY;
