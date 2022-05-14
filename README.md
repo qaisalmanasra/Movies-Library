@@ -3,6 +3,7 @@
 **Author Name**: Qais Manasra
 
 ## WRRC
+![WRRC](./images/WRRC.jpeg)
 ![wrrc](./images/wrrc.jpg)
 
 ## Overview
@@ -18,6 +19,9 @@
 8.Create a function to handle the server error (status 500)
 9.Create a function to handle "page not found error" (status 404)
 10.Update Readme file.
+11.add un update requst
+12.add a delete requst
+13.add a get data by id requst
 
 ## Project Features
 <!-- What are the features included in you app -->
